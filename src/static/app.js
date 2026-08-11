@@ -61,14 +61,22 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("theme", nextTheme);
   }
 
-  const savedTheme = localStorage.getItem("theme");
+  let savedTheme = null;
+  try {
+    savedTheme = localStorage.getItem("theme");
+  } catch (error) {
+    savedTheme = null;
+  }
   const preferredTheme =
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
+  const preloadedTheme = document.documentElement.getAttribute("data-theme");
   const initialTheme =
-    document.documentElement.getAttribute("data-theme") ||
+    (preloadedTheme === "dark" || preloadedTheme === "light"
+      ? preloadedTheme
+      : null) ||
     (savedTheme === "dark" || savedTheme === "light"
       ? savedTheme
       : preferredTheme);
