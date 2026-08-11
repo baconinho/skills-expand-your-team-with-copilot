@@ -67,7 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
-  const initialTheme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : preferredTheme;
+  const initialTheme =
+    document.documentElement.getAttribute("data-theme") ||
+    (savedTheme === "dark" || savedTheme === "light"
+      ? savedTheme
+      : preferredTheme);
   applyTheme(initialTheme);
   themeToggle.addEventListener("click", toggleTheme);
 
@@ -355,6 +359,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return details.schedule;
   }
 
+  function escapeHtml(value) {
+    const escapedValue = document.createElement("div");
+    escapedValue.textContent = value;
+    return escapedValue.innerHTML;
+  }
+
   // Function to determine activity type (this would ideally come from backend)
   function getActivityType(activityName, description) {
     const name = activityName.toLowerCase();
@@ -563,7 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     const difficultyHtml = details.difficulty
-      ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
+      ? `<p><strong>Difficulty:</strong> ${escapeHtml(details.difficulty)}</p>`
       : "";
 
     // Create capacity indicator
