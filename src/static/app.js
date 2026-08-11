@@ -53,17 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleTheme() {
-    const currentTheme =
-      document.documentElement.getAttribute("data-theme") === "dark"
-        ? "dark"
-        : "light";
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
     const nextTheme = currentTheme === "dark" ? "light" : "dark";
     applyTheme(nextTheme);
     localStorage.setItem("theme", nextTheme);
   }
 
-  const savedTheme = localStorage.getItem("theme") === "dark" ? "dark" : "light";
-  applyTheme(savedTheme);
+  const savedTheme = localStorage.getItem("theme");
+  const preferredTheme =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  const initialTheme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : preferredTheme;
+  applyTheme(initialTheme);
   themeToggle.addEventListener("click", toggleTheme);
 
   // Time range mappings for the dropdown
